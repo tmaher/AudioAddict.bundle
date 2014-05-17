@@ -34,15 +34,13 @@ Digitally Imported [di.fm]Sky.fmJazzRadio.comRockRadio.com
 
 ### 2\. Accessing the API
 
-:
-
 #### 2.1. Addresses and headers
 
 The API server is located at api.audioaddict.com. A regular request's URL would look like http://api.audioaddict.com/v1/di/track_history. v1 stands for the API's version number. This is always the same. di stands for the streaming network. It's basically the part of the network's domain before the dot (di.fm, jazzradio.com). track_history is a resource, it returns a JSON string with information about the last-played track for the network's channels. Learn more about the resources below.
 
 IMPORTANT: A lot of requests require an Authorization header:
 
-Authorization: Basic ZXBoZW1lcm9uOmRheWVpcGgwbmVAcHA=
+`Authorization: Basic ZXBoZW1lcm9uOmRheWVpcGgwbmVAcHA=`
 
 This is basically the same as using the username "ephemeron" and password "dayeiph0ne@pp".
 
@@ -67,8 +65,6 @@ The API server supports HTTPS. Use it when you're sending or receiving sensitive
 
 ### 3\. Resources
 
-:
-
 #### 3.1. About channels
 
 The streamlist parameter is a key that describes a stream quality and format. These are different for each network. Please see the Streamlists chapter in the appendix for more information.
@@ -80,14 +76,11 @@ The key parameter is a key that describes a channel. It's usually just the chann
 
 This request returns a JSON-encoded array with channel objects in it. Every channel object has these fields: key, id, name, description and playlist.
 
-Host
-listen.
-
-HTTPS recommended
-No
-
-URL
-http://listen./[streamlist]
+<table>
+<tr><td>Host</td><td>`listen.di.fm`</td></tr>
+<tr><td>HTTPS recommended</td><td>No</td></tr>
+<tr><td>URL</td><td>http://listen.di.fm/[streamlist]</td></tr>
+</table>
 
 ##### Getting channel playlists
 
@@ -95,13 +88,13 @@ This request returns a JSON-encoded array with stream URLs in it. The streams ar
 Read more about streamlists in the dedicated chapter.
 
 Host
-listen.
+listen.di.fm
 
 HTTPS recommended
 No
 
 URL
-http://listen./[streamlist]/[key]
+http://listen.di.fm/[streamlist]/[key]
 
 Possible data types
 JSON, JSONP, PLS, ASX (NOTE: The ASX type gives wrong URLs)
@@ -316,13 +309,13 @@ All accounts can keep favorite channels.
 This returns a playlist with the channel's name in the Title fields. Easy to parse manually.
 
 Host
-listen.
+listen.di.fm
 
 HTTPS recommended
 No
 
 URL
-http://listen./public3/favorites.pls?[listen_key]
+http://listen.di.fm/public3/favorites.pls?[listen_key]
 
 ##### Writing favorite channels with the listen_key
 
@@ -388,13 +381,13 @@ Making a POST request adds the channel, making a DELETE request removes it. api_
 This returns a playlist with the channel's name in the Title fields. Easy to parse manually.
 
 Host
-listen.
+listen.di.fm
 
 HTTPS recommended
 Yes (NOTE: The HTTPS certificate is invalid on this domain, that's why this method is not recommended.)
 
 URL
-https://listen./public3/favorites.pls?username=[username]&amp;password=[password]
+https://listen.di.fm/public3/favorites.pls?username=[username]&amp;password=[password]
 
 #### 3.9. Trial
 
