@@ -29,8 +29,12 @@
 
 AudioAddict Inc. is the company behind the internet radio streaming services Digitally Imported, Sky.fm, JazzRadio.com and RockRadio.com. They have a RESTful API in place, but sadly, it lacks an official documentation. This has been a pain in the ass for a lot of people who wanted to build applications for listening to these streams. That's why I decided to make an unofficial documentation myself. Please note that since this API is not public, everything can change and break at any time! Fortunately, this doesn't happen very often.
 
-Please choose a network you'd like to be used in the examples and specifications below:
-Digitally Imported [di.fm]Sky.fmJazzRadio.comRockRadio.com
+Network   | Listen host
+----------|------------
+di        | listen.di.fm
+sky       | listen.sky.fm
+jazzradio | listen.jazzradio.com
+rockradio | listen.rockradio.com
 
 ### 2\. Accessing the API
 
@@ -69,6 +73,7 @@ The API server supports HTTPS. Use it when you're sending or receiving sensitive
 
 The streamlist parameter is a key that describes a stream quality and format. These are different for each network. Please see the Streamlists chapter in the appendix for more information.
 The key parameter is a key that describes a channel. It's usually just the channel name in lowercase with spaces trimmed, but there are some exceptions.
+As of this writing (2014-05-18), `public3` is the only streamlist common across all four networks.  It's used a number of times in this document for quick checks.
 
 #### 3.2. Channels
 
@@ -97,7 +102,7 @@ Possible data types
 JSON, JSONP, PLS, ASX (NOTE: The ASX type gives wrong URLs)
 
 Optional parameter
-A listen key, the listen key will be appended to all URLs. Example: trance?[listen_key]
+A listen key, the listen key will be appended to all URLs. Example: `trance?[listen_key]`
 
 ##### Getting detailed information about channels
 
@@ -115,7 +120,7 @@ This returns an array with track history objects.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | No
-URL    | http://api.audioaddict.com/v1//track_history
+URL    | http://api.audioaddict.com/v1/[NETWORK]/track_history
 
 ##### Getting track history for a single channel
 
@@ -125,7 +130,7 @@ This returns an array with track history objects.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | No
-URL    | http://api.audioaddict.com/v1//track_history/channel/[channel_id]
+URL    | http://api.audioaddict.com/v1/[NETWORK]/track_history/channel/[channel_id]
 
 ##### [Getting information about a single track][4]
 
@@ -141,7 +146,7 @@ This returns a JSON-encoded array with event objects in it.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | No
-URL    | http://api.audioaddict.com/v1//events
+URL    | http://api.audioaddict.com/v1/[NETWORK]/events
 
 ##### Getting upcoming events for a channel
 
@@ -151,7 +156,7 @@ This returns a JSON-encoded array with event objects in it. id is the channel's 
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | No
-URL    | http://api.audioaddict.com/v1//events/channel/[id]
+URL    | http://api.audioaddict.com/v1/[NETWORK]/events/channel/[id]
 
 * * *
 
@@ -173,7 +178,7 @@ The batch_update resource can be used for getting a lot of data at once. Here's 
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | No
-URL    | http://api.audioaddict.com/v1//mobile/batch_update
+URL    | http://api.audioaddict.com/v1/[NETWORK]/mobile/batch_update
 
 Required parameter
 A comma-seperated list of streamlists to be included in the data. The list must be given as a GET or POST parameter with the key stream_set_key.
@@ -192,7 +197,7 @@ This returns a JSON-encoded object with information about the user.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members/authenticate
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members/authenticate
 
 Required parameters
 The request must be POST, api_key or username and password must be sent in POST or GET.
@@ -205,7 +210,7 @@ This returns a JSON-encoded object with information about the created user.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members
 
 Required parameters
 The request must be POST, member[email], member[first_name], member[last_name], member[password] and member[password_confirmation] must be sent in POST or GET.
@@ -236,7 +241,7 @@ This returns a JSON-encoded object with information about a single track includi
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | No
-URL    | http://api.audioaddict.com/v1//tracks/[track_id]
+URL    | http://api.audioaddict.com/v1/[NETWORK]/tracks/[track_id]
 
 This sets a vote for a track to up or down. channel_id stands for the channel the track is or was playing on. NOTE: This feature is available for all networks, even though the voting isn't implemented in those websites.
 It returns a JSON-encoded object with the elements up and down, specifying the updated number of votes.
@@ -245,7 +250,7 @@ It returns a JSON-encoded object with the elements up and down, specifying the u
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//tracks/[track_id]/vote/[channel_id]/[up/down]
+URL    | https://api.audioaddict.com/v1/[NETWORK]/tracks/[track_id]/vote/[channel_id]/[up/down]
 
 Required parameter
 The api_key in POST, or the username and password in POST.
@@ -258,7 +263,7 @@ It returns a JSON-encoded object with the elements up and down, specifying the u
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | http://api.audioaddict.com/v1//tracks/[track_id]/vote/[channel_id]
+URL    | http://api.audioaddict.com/v1/[NETWORK]/tracks/[track_id]/vote/[channel_id]
 
 Required parameter
 The api_key in DELETE, or the username and password in DELETE.
@@ -291,7 +296,7 @@ This returns a JSON-encoded array with favorite objects it in. These objects con
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members/1/favorites/channels
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members/1/favorites/channels
 
 Required parameter
 The api_key, or the username and password. POST and GET are both allowed.
@@ -304,7 +309,7 @@ This returns the same data kind of data as above.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members/1/favorites/channels?api_key=[api_key]
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members/1/favorites/channels?api_key=[api_key]
 
 Required parameter
 Raw JSON payload in POST, in the following format:
@@ -329,7 +334,7 @@ This returns the favorite object of the new channel or HTTP 204 No Content.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members/1/favorites/channel/[channel_id]
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members/1/favorites/channel/[channel_id]
 
 Required parameter
 Making a POST request adds the channel, making a DELETE request removes it. api_key or username and password in POST/DELETE or GET.
@@ -356,7 +361,7 @@ This returns a JSON-encoded object with one element called allowed, with a value
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members/1/subscriptions/trial_allowed/premium-pass?api_key=[api_key] or https://api.audioaddict.com/v1//members/1/subscriptions/trial_allowed/premium-pass?username=[username]&amp;password=[password]
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members/1/subscriptions/trial_allowed/premium-pass?api_key=[api_key] or https://api.audioaddict.com/v1/[NETWORK]/members/1/subscriptions/trial_allowed/premium-pass?username=[username]&amp;password=[password]
 
 ##### Activating a trial
 
@@ -366,7 +371,7 @@ This returns HTTP 204 No Content on success, or HTTP 422 Unprocessable Entry on 
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members/1/subscriptions/trial/premium-pass?api_key=[api_key] or https://api.audioaddict.com/v1//members/1/subscriptions/trial/premium-pass?username=[username]&amp;password=[password]
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members/1/subscriptions/trial/premium-pass?api_key=[api_key] or https://api.audioaddict.com/v1/[NETWORK]/members/1/subscriptions/trial/premium-pass?username=[username]&amp;password=[password]
 
 Required parameter
 The request must be POST, and the api_key or username and password must be sent as POST or as a GET parameter.
@@ -381,7 +386,7 @@ Returns HTTP 204 No Content.
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | Yes
-URL    | https://api.audioaddict.com/v1//members/send_reset_password
+URL    | https://api.audioaddict.com/v1/[NETWORK]/members/send_reset_password
 
 Required parameter
 The request must be POST, and the username must be sent as POST or as a GET parameter.
@@ -392,7 +397,7 @@ The request must be POST, and the username must be sent as POST or as a GET para
 -------|-------
 Host   | api.audioaddict.com
 HTTPS? | No
-URL    | http://api.audioaddict.com/v1/di/plans/premium-pass
+URL    | http://api.audioaddict.com/v1/[NETWORK]/plans/premium-pass
 
 ### 4\. Appendix
 
@@ -470,7 +475,7 @@ public3 | 96kbps|  mp3
 
 There's no good way to do this, therefore it's better to let users log in using their email and password. If it's really required, here's a way:
 
-1. Try to download the favorites playlist: http://listen.di.fm/public3/favorites?[listen_key]. If this fails, the key is invalid.
+1. Try to download the favorites playlist: http://[LISTEN_HOST]/public3/favorites?[listen_key]. If this fails, the key is invalid.
 2. Try to connect to a premium stream, if this fails, the key is not premium.
 
 I use [this Java class][5] for validating listen keys in my app, feel free to use it.
