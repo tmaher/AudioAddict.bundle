@@ -76,25 +76,22 @@ The key parameter is a key that describes a channel. It's usually just the chann
 
 This request returns a JSON-encoded array with channel objects in it. Every channel object has these fields: key, id, name, description and playlist.
 
-<table>
-<tr><td>Host</td><td>`listen.di.fm`</td></tr>
-<tr><td>HTTPS recommended</td><td>No</td></tr>
-<tr><td>URL</td><td>http://listen.di.fm/[streamlist]</td></tr>
-</table>
+&nbsp; | &nbsp;
+-------|-------
+Host   | listen.di.fm
+HTTPS? | No
+URL    | http://listen.di.fm/[streamlist]
 
 ##### Getting channel playlists
 
 This request returns a JSON-encoded array with stream URLs in it. The streams are in the bitrate and format specified by the streamlist. The key parameter is the channel's key.
 Read more about streamlists in the dedicated chapter.
 
-Host
-listen.di.fm
-
-HTTPS recommended
-No
-
-URL
-http://listen.di.fm/[streamlist]/[key]
+&nbsp; | &nbsp;
+-------|-------
+Host   | listen.di.fm
+HTTPS? | No
+URL    | http://listen.di.fm/[streamlist]/[key]
 
 Possible data types
 JSON, JSONP, PLS, ASX (NOTE: The ASX type gives wrong URLs)
@@ -114,27 +111,21 @@ This is possible with the batch_update resource, read on!
 
 This returns an array with track history objects.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-No
-
-URL
-http://api.audioaddict.com/v1//track_history
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | No
+URL    | http://api.audioaddict.com/v1//track_history
 
 ##### Getting track history for a single channel
 
 This returns an array with track history objects.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-No
-
-URL
-http://api.audioaddict.com/v1//track_history/channel/[channel_id]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | No
+URL    | http://api.audioaddict.com/v1//track_history/channel/[channel_id]
 
 ##### [Getting information about a single track][4]
 
@@ -146,27 +137,21 @@ http://api.audioaddict.com/v1//track_history/channel/[channel_id]
 
 This returns a JSON-encoded array with event objects in it.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-No
-
-URL
-http://api.audioaddict.com/v1//events
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | No
+URL    | http://api.audioaddict.com/v1//events
 
 ##### Getting upcoming events for a channel
 
 This returns a JSON-encoded array with event objects in it. id is the channel's id.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-No
-
-URL
-http://api.audioaddict.com/v1//events/channel/[id]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | No
+URL    | http://api.audioaddict.com/v1//events/channel/[id]
 
 * * *
 
@@ -174,7 +159,7 @@ http://api.audioaddict.com/v1//events/channel/[id]
 
 A DI crew member once said:
 
-&gt; "The batch update request is used for mobile apps to avoid making many API calls, but you are welcome to use it for the time being. With that said, theres no guarantee this won't change moving forward. As I've always said, we do plan on releasing an official API in the future, but theres a lot more involved than just exposing a few REST urls and our API is still evolving."
+> "The batch update request is used for mobile apps to avoid making many API calls, but you are welcome to use it for the time being. With that said, theres no guarantee this won't change moving forward. As I've always said, we do plan on releasing an official API in the future, but theres a lot more involved than just exposing a few REST urls and our API is still evolving."
 
 The batch_update resource can be used for getting a lot of data at once. Here's a list of data in the batch_update's JSON including their location.
 
@@ -184,14 +169,11 @@ The batch_update resource can be used for getting a lot of data at once. Here's 
 * Loads of links to assets and channel art - /assets - also in the detailed channel objects (see first item in this list).
 * All upcoming events - /events - an array containing event objects.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-No
-
-URL
-http://api.audioaddict.com/v1//mobile/batch_update
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | No
+URL    | http://api.audioaddict.com/v1//mobile/batch_update
 
 Required parameter
 A comma-seperated list of streamlists to be included in the data. The list must be given as a GET or POST parameter with the key stream_set_key.
@@ -206,14 +188,11 @@ This data contains the listen_key, api_key, the name of the user, whether the us
 
 This returns a JSON-encoded object with information about the user.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members/authenticate
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members/authenticate
 
 Required parameters
 The request must be POST, api_key or username and password must be sent in POST or GET.
@@ -222,14 +201,11 @@ The request must be POST, api_key or username and password must be sent in POST 
 
 This returns a JSON-encoded object with information about the created user.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members
 
 Required parameters
 The request must be POST, member[email], member[first_name], member[last_name], member[password] and member[password_confirmation] must be sent in POST or GET.
@@ -238,14 +214,11 @@ The request must be POST, member[email], member[first_name], member[last_name], 
 
 This confirms an account. confirmation_token is in the JSON object returned after registering.
 
-Host
-www.di.fm
-
-HTTPS recommended
-No
-
-URL
-http://www.di.fm/member/confirm/[confirmation_token]
+&nbsp; | &nbsp;
+-------|-------
+Host   | www.di.fm
+HTTPS? | No
+URL    | http://www.di.fm/member/confirm/[confirmation_token]
 
 * * *
 
@@ -259,25 +232,20 @@ Track history objects contain a field called track_id. This is important for vot
 
 This returns a JSON-encoded object with information about a single track including the number of votes and whether the track is a mix.
 
-Host
-api.audioaddict.com
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | No
+URL    | http://api.audioaddict.com/v1//tracks/[track_id]
 
-HTTPS recommended
-No
-
-URL
-http://api.audioaddict.com/v1//tracks/[track_id]
 This sets a vote for a track to up or down. channel_id stands for the channel the track is or was playing on. NOTE: This feature is available for all networks, even though the voting isn't implemented in those websites.
 It returns a JSON-encoded object with the elements up and down, specifying the updated number of votes.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//tracks/[track_id]/vote/[channel_id]/[up/down]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//tracks/[track_id]/vote/[channel_id]/[up/down]
 
 Required parameter
 The api_key in POST, or the username and password in POST.
@@ -286,14 +254,11 @@ The api_key in POST, or the username and password in POST.
 
 It returns a JSON-encoded object with the elements up and down, specifying the updated number of votes.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-http://api.audioaddict.com/v1//tracks/[track_id]/vote/[channel_id]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | http://api.audioaddict.com/v1//tracks/[track_id]/vote/[channel_id]
 
 Required parameter
 The api_key in DELETE, or the username and password in DELETE.
@@ -308,14 +273,11 @@ All accounts can keep favorite channels.
 
 This returns a playlist with the channel's name in the Title fields. Easy to parse manually.
 
-Host
-listen.di.fm
-
-HTTPS recommended
-No
-
-URL
-http://listen.di.fm/public3/favorites.pls?[listen_key]
+&nbsp; | &nbsp;
+-------|-------
+Host   | listen.di.fm
+HTTPS? | No
+URL    | http://listen.di.fm/public3/favorites.pls?[listen_key]
 
 ##### Writing favorite channels with the listen_key
 
@@ -325,14 +287,11 @@ This is not possible.
 
 This returns a JSON-encoded array with favorite objects it in. These objects contain position and channel_id elements.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members/1/favorites/channels
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members/1/favorites/channels
 
 Required parameter
 The api_key, or the username and password. POST and GET are both allowed.
@@ -341,37 +300,36 @@ The api_key, or the username and password. POST and GET are both allowed.
 
 This returns the same data kind of data as above.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members/1/favorites/channels?api_key=[api_key]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members/1/favorites/channels?api_key=[api_key]
 
 Required parameter
 Raw JSON payload in POST, in the following format:
 
-{"favorites":[{"position":1,"channel_id":1}, {"position":2,"channel_id":2}]}
-
+```
+{"favorites": [
+                {"position":1, "channel_id":1},
+                {"position":2, "channel_id":2}
+              ]
+}
+```
 
 This header is required:
 
-Content-Type: application/json
+`Content-Type: application/json`
 
 ##### Removing or adding channels
 
 This returns the favorite object of the new channel or HTTP 204 No Content.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members/1/favorites/channel/[channel_id]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members/1/favorites/channel/[channel_id]
 
 Required parameter
 Making a POST request adds the channel, making a DELETE request removes it. api_key or username and password in POST/DELETE or GET.
@@ -380,14 +338,11 @@ Making a POST request adds the channel, making a DELETE request removes it. api_
 
 This returns a playlist with the channel's name in the Title fields. Easy to parse manually.
 
-Host
-listen.di.fm
-
-HTTPS recommended
-Yes (NOTE: The HTTPS certificate is invalid on this domain, that's why this method is not recommended.)
-
-URL
-https://listen.di.fm/public3/favorites.pls?username=[username]&amp;password=[password]
+&nbsp; | &nbsp;
+-------|-------
+Host   | listen.di.fm
+HTTPS? | The HTTPS certificate is invalid on this domain, that's why this method is not recommended.)
+URL    | https://listen.di.fm/public3/favorites.pls?username=[username]&amp;password=[password]
 
 #### 3.9. Trial
 
@@ -397,31 +352,21 @@ AudioAddict offers a free 7-day premium trial period for all accounts.
 
 This returns a JSON-encoded object with one element called allowed, with a value of true or false. It's false when the trial has been activated before.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members/1/subscriptions/trial_allowed/premium-pass?api_key=[api_key]
-or
-https://api.audioaddict.com/v1//members/1/subscriptions/trial_allowed/premium-pass?username=[username]&amp;password=[password]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members/1/subscriptions/trial_allowed/premium-pass?api_key=[api_key] or https://api.audioaddict.com/v1//members/1/subscriptions/trial_allowed/premium-pass?username=[username]&amp;password=[password]
 
 ##### Activating a trial
 
 This returns HTTP 204 No Content on success, or HTTP 422 Unprocessable Entry on failure, along with a JSON-encoded error message.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members/1/subscriptions/trial/premium-pass?api_key=[api_key]
-or
-https://api.audioaddict.com/v1//members/1/subscriptions/trial/premium-pass?username=[username]&amp;password=[password]
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members/1/subscriptions/trial/premium-pass?api_key=[api_key] or https://api.audioaddict.com/v1//members/1/subscriptions/trial/premium-pass?username=[username]&amp;password=[password]
 
 Required parameter
 The request must be POST, and the api_key or username and password must be sent as POST or as a GET parameter.
@@ -432,28 +377,22 @@ The request must be POST, and the api_key or username and password must be sent 
 
 Returns HTTP 204 No Content.
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-Yes
-
-URL
-https://api.audioaddict.com/v1//members/send_reset_password
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | Yes
+URL    | https://api.audioaddict.com/v1//members/send_reset_password
 
 Required parameter
 The request must be POST, and the username must be sent as POST or as a GET parameter.
 
 ##### Some info about prices
 
-Host
-api.audioaddict.com
-
-HTTPS recommended
-No
-
-URL
-http://api.audioaddict.com/v1/di/plans/premium-pass
+&nbsp; | &nbsp;
+-------|-------
+Host   | api.audioaddict.com
+HTTPS? | No
+URL    | http://api.audioaddict.com/v1/di/plans/premium-pass
 
 ### 4\. Appendix
 
@@ -465,143 +404,67 @@ Streamlists are lists of stream URLs. All streams in a streamlist have the same 
 
 ##### Digitally Imported
 
-android_low
-40kbps aac
-
-android
-64kbps aac
-
-android_high
-96kbps mp3
-
-android_premium_low
-40kbps aac
-
-android_premium_medium
-64kbps aac
-
-android_premium
-128kbps aac
-
-android_premium_high
-256kbps mp3
-
-public1
-64kbps aac
-
-public2
-40kbps aac
-
-public3
-96kbps mp3
-
-premium_low
-40kbps aac
-
-premium_medium
-64kbps aac
-
-premium
-128kbps aac
-
-premium_high
-256kbps mp3
+Streamlist  | bitrate | codec
+------------|---------|------
+android_low | 40kbps  | aac
+android     | 64kbps  | aac
+android_high | 96kbps | mp3
+android_premium_low | 40kbps | aac
+android_premium_medium | 64kbps | aac
+android_premium | 128kbps | aac
+android_premium_high | 256kbps | mp3
+public1 | 64kbps | aac
+public2 | 40kbps | aac
+public3 | 96kbps | mp3
+premium_low | 40kbps | aac
+premium_medium | 64kbps | aac
+premium | 128kbps | aac
+premium_high | 256kbps | mp3
 
 ##### Sky.fm
 
-appleapp_low
-40kbps aac
-
-appleapp
-64kbps aac
-
-appleapp_high
-96kbps mp3
-
-appleapp_premium_medium
-64kbps aac
-
-appleapp_premium
-128kbps aac
-
-appleapp_premium_high
-256kbps mp3
-
-public1
-40kbps aac
-
-public5
-40kbps wma
-
-public3
-96kbps mp3
-
-premium_low
-40kbps aac
-
-premium_medium
-64kbps aac
-
-premium
-128kbps aac
-
-premium_high
-256kbps mp3
+Streamlist  | bitrate | codec
+------------|---------|------
+appleapp_low | 40kbps | aac
+appleapp | 64kbps | aac
+appleapp_high | 96kbps | mp3
+appleapp_premium_medium | 64kbps | aac
+appleapp_premium | 128kbps | aac
+appleapp_premium_high | 256kbps | mp3
+public1 | 40kbps | aac
+public5 | 40kbps | wma
+public3 | 96kbps | mp3
+premium_low | 40kbps | aac
+premium_medium | 64kbps | aac
+premium | 128kbps | aac
+premium_high | 256kbps | mp3
 
 ##### JazzRadio
 
-appleapp_low
-40kbps aac
-
-appleapp
-64kbps aac
-
-appleapp_premium_medium
-64kbps aac
-
-appleapp_premium
-128kbps aac
-
-appleapp_premium_high
-256kbps mp3
-
-public1
-40kbps aac
-
-public3
-64kbps mp3
-
-premium_low
-40kbps aac
-
-premium_medium
-64kbps aac
-
-premium
-128kbps aac
-
-premium_high
-256kbps mp3
+Streamlist  | bitrate | codec
+------------|---------|------
+appleapp_low | 40kbps | aac
+appleapp | 64kbps | aac
+appleapp_premium_medium | 64kbps | aac
+appleapp_premium | 128kbps | aac
+appleapp_premium_high | 256kbps | mp3
+public1 | 40kbps | aac
+public3 | 64kbps | mp3
+premium_low | 40kbps | aac
+premium_medium | 64kbps | aac
+premium | 128kbps | aac
+premium_high | 256kbps | mp3
 
 ##### RockRadio
 
-android_low
-40kbps aac
-
-android
-64kbps aac
-
-android_premium_medium
-64kbps aac
-
-android_premium
-128kbps aac
-
-android_premium_high
-256kbps mp3
-
-public3
-96kbps mp3
+Streamlist  | bitrate | codec
+------------|---------|------
+android_low | 40kbps | aac
+android | 64kbps | aac
+android_premium_medium | 64kbps | aac
+android_premium | 128kbps | aac
+android_premium_high | 256kbps | mp3
+public3 | 96kbps|  mp3
 
 #### 4.2. Validating listen keys
 
