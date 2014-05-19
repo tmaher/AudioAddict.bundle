@@ -9,7 +9,7 @@
         "id": "stream_pref",
         "type": "text",
         "label": "Preferred Stream",
-        "default": ""
+        "default": "public3"
     },
     {
         "id": "source_pref",
