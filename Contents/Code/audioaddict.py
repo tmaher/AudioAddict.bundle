@@ -70,6 +70,11 @@ class AudioAddict:
         else:
             return '?listen_key=' + self.listenkey
 
+    def is_validservice(self, serv=None):
+        """Is this a valid service."""
+
+        return serv in self.validservices
+
     def get_validservices(self):
         """Get list of valid services."""
 
@@ -291,4 +296,3 @@ class AudioAddict:
                     thumb = channel['asset_url']
 
         return thumb
-

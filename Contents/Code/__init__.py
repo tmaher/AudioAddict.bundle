@@ -54,11 +54,17 @@ def MusicMainMenu():
 
     return oc
 
-@route(MUSIC_PREFIX + '/service')
+@route(MUSIC_PREFIX + '/service/{serv}')
 def GetChannels(serv):
     """This produces the list of channels for a given service."""
 
+    if not AA.is_validservice(serv):
+        Log.Error("Invalid service '%s'", serv)
+        return ObjectContainer(header="Error", message="Invalid service")
+
     # Set some preferences. It really makes life easier if they're set.
+    Log.Debug("Global default service set to '%s'", serv)
+
     AA.set_service(serv)
     AA.set_listenkey(Prefs['listen_key'])
     AA.set_streampref(Prefs['stream_pref'])
