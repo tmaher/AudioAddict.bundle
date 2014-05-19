@@ -109,23 +109,46 @@ class AudioAddict:
         """Fetch from API everything we need to know about this service"""
 
         Log.Debug("batch_update fetch, serv %s", serv)
-
         max_age_in_cache = 0 if refresh else CACHE_1WEEK
-        svc_info = JSON.ObjectFromURL(self.batch_update_url(serv), headers=self.auth_header, cacheTime = max_age_in_cache)
 
         if refresh or (not 'ext' in Dict):
             Dict['ext'] = {}
-        Dict['ext'][serv] = svc_info
+        Dict['ext'][serv] = JSON.ObjectFromURL(self.batch_update_url(serv),
+                headers=self.auth_header, cacheTime = max_age_in_cache)
 
         if refresh or (not 'ext_chaninfo' in Dict):
             Dict['ext_chaninfo'] = {}
         if refresh or (not serv in Dict['ext_chaninfo']):
             Dict['ext_chaninfo'][serv] = {}
 
-        for chaninfo in svc_info['channel_filters'][0]['channels']:
+        for chaninfo in Dict['ext'][serv]['channel_filters'][0]['channels']:
             Dict['ext_chaninfo'][serv][chaninfo['key']] = chaninfo
 
         return True
+
+    def get_ext_chanlist(self, serv=None, refresh=False):
+        """Get list of channels from the mobile batch feed"""
+
+        self.fetch_service_channel_info(serv, refresh)
+        return Dict['ext_chaninfo'][serv].keys()
+
+    def get_ext_streams(self, serv=None, channel=None, stream=None):
+        """Get stream info for a given service/channel/stream tuple"""
+
+        if not 'chan2stream' in Dict:
+            Dict['chan2stream'] = {}
+        if not serv in Dict['chan2stream']:
+            Dict['chan2stream'][serv] = {}
+        if not channel in Dict['chan2stream'][serv]:
+            Dict['chan2stream'][serv][channel] = {}
+        if not stream in Dict['chan2stream'][serv][channel]:
+            id = self.get_ext_channel_info(serv, channel)['id']
+            Dict['chan2stream'][serv][channel][stream] = ifilter(
+                lambda x: ('id' in x) and (x['id'] == id),
+                Dict['streamlists'][stream]['channels'])[0]['streams']
+
+        return Dict['chan2stream'][serv][channel][stream]
+
 
     def get_servicename(self, serv=None):
         """Get the name of a given service."""
@@ -229,7 +252,17 @@ class AudioAddict:
 
         return track
 
-    def get_chanthumb(self, serv=None, channel=None):
+    def get_chan_thumb(self, serv=None, channel=None):
         """Get the thumbnail for a channel."""
 
         return self.get_ext_channel_info(serv, channel, attr='asset_url')
+
+    def get_chan_title(self, serv=None, channel=None):
+        """Get title of a channel."""
+
+        return self.get_ext_channel_info(serv, channel, attr='name')
+
+    def get_chan_summary(self, serv=None, channel=None):
+        """Get summary of a channel."""
+
+        return self.get_ext_channel_info(serv, channel, attr='description')
