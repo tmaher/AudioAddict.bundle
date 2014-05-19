@@ -26,8 +26,7 @@ class AudioAddict:
                 'rockradio': 'RockRadio.com'
                 }
         self.apihost = 'api.audioaddict.com'
-        self.service = None
-        self.chanlist = []
+
         # Can't get AAC to play back, so MP3-only for now.
         self.validstreams = [
                 'public3',
@@ -78,15 +77,7 @@ class AudioAddict:
 
         return self.validservices
 
-    def set_service(self, serv=None):
-        """Set which service we're using."""
-
-        if not serv in self.validservices.keys():
-            raise Exception('Invalid service')
-
-        self.service = serv
-
-    def get_ext_channel_info(self, serv=None, channel=None, key=None):
+    def get_ext_channel_info(self, serv=None, channel=None, attr=None):
         """Get extended channel info from local storage"""
 
         if (not 'ext_chaninfo' in Dict) or (not serv in Dict['ext_chaninfo']):
@@ -99,19 +90,16 @@ class AudioAddict:
             Log.Error("Trying to read nonexistant channel %s/%s", serv, channel)
             return None
 
-        if key == None:
+        if attr == None:
           return Dict['ext_chaninfo'][serv][channel]
 
-        if not key in Dict['ext_chaninfo'][serv][channel]:
+        if not attr in Dict['ext_chaninfo'][serv][channel]:
           return None
 
-        return Dict['ext_chaninfo'][serv][channel][key]
+        return Dict['ext_chaninfo'][serv][channel][attr]
 
     def fetch_service_channel_info(self, serv=None, refresh=False):
         """Fetch from API everything we need to know about this service"""
-
-        if serv == None:
-            serv = self.get_service()
 
         Log.Debug("batch_update fetch, serv %s", serv)
         url = self.get_apihost() + serv + "/mobile/batch_update?stream_set_key=public3"
@@ -142,11 +130,8 @@ class AudioAddict:
     def get_servicename(self, serv=None):
         """Get the name of a given service."""
 
-        if serv == None:
-            serv = self.get_service()
-
-        if not serv in self.get_validservices().keys():
-            raise Exception('Invalid service')
+        if not serv in self.get_validservices():
+            raise Exception("Invalid service %s" % serv)
 
         return self.validservices[serv]
 
@@ -155,16 +140,10 @@ class AudioAddict:
 
         return self.validstreams
 
-    def get_serviceurl(self, serv=None, prefix='listen'):
+    def get_serviceurl(self, serv=None):
         """Get the service URL for the service we're using."""
 
-        if serv == None:
-            serv = self.get_service()
-
-        url = 'http://' + prefix + '.' + self.get_servicename(serv)
-        url = url.lower()
-
-        return url
+        return 'http://listen.' + self.get_servicename(serv).lower() + '/'
 
     def set_streampref(self, stream=None):
         """Set the preferred stream."""
@@ -189,27 +168,20 @@ class AudioAddict:
 
         return self.sourcepref
 
-    def get_chanlist(self, refresh=False):
+    def get_chanlist(self, serv=None, refresh=False):
         """Get the master channel list."""
 
-        if len(self.chanlist) < 1 or refresh == True:
-            try:
-                # Pull from public3 because it's the only endpoint common to
-                # all services.
-                data = urllib.urlopen(self.get_serviceurl() + '/' + self.get_streampref())
-                self.chanlist = json.loads(data.read())
-            except Exception:
-                raise
+        max_time_in_cache = 0 if refresh else CACHE_1HOUR
 
-        return self.chanlist
+        return JSON.ObjectFromURL(self.get_serviceurl(serv) + self.get_streampref(), cacheTime=max_time_in_cache)
 
-    def get_chaninfo(self, key):
+    def get_chaninfo(self, serv=None, channel=None):
         """Get the info for a particular channel."""
 
         chaninfo = None
 
-        for chan in self.get_chanlist():
-            if chan['key'] == key:
+        for chan in self.get_chanlist(serv):
+            if chan['key'] == channel:
                 chaninfo = chan.copy()
 
         if chaninfo == None:
@@ -217,13 +189,12 @@ class AudioAddict:
 
         return chaninfo
 
-    def get_streamurl(self, key):
+    def get_streamurl(self, serv=None, channel=None):
         """Generate a streamable URL for a channel."""
 
-        channelurl = self.get_serviceurl() + '/' + self.get_streampref() + '/' + key + self.get_listenkey()
+        channelurl = self.get_serviceurl(serv) + self.get_streampref() + '/' + channel + self.get_listenkey()
 
-        data = urllib.urlopen(channelurl)
-        sources = json.loads(data.read())
+        sources = JSON.ObjectFromURL(channelurl)
 
         streamurl = None
 
@@ -239,17 +210,14 @@ class AudioAddict:
 
         return streamurl
 
-    def get_chanhist(self, key):
+    def get_chanhist(self, serv=None, channel=None):
         """Get track history for a channel."""
 
-        servurl = self.get_apihost() + self.get_service() + '/' + 'track_history/channel/' + str(self.get_chaninfo(key)['id'])
+        servurl = self.get_apihost() + serv + '/track_history/channel/' + str(self.get_chaninfo(serv, channel)['id'])
 
-        data = urllib.urlopen(servurl)
-        history = json.loads(data.read())
+        return JSON.ObjectFromURL(servurl, cacheTime=0)
 
-        return history
-
-    def get_nowplaying(self, key):
+    def get_nowplaying(self, serv=None, channel=None):
         """Get current track for a channel."""
 
         # Normally the current song is position 0, but if an advertisement
@@ -258,14 +226,14 @@ class AudioAddict:
 
         track = 'Unknown - Unknown'
 
-        if not 'ad' in self.get_chanhist(key)[0]:
-            track = self.get_chanhist(key)[0]['track']
+        if not 'ad' in self.get_chanhist(serv, channel)[0]:
+            track = self.get_chanhist(serv, channel)[0]['track']
         else:
-            track = self.get_chanhist(key)[1]['track']
+            track = self.get_chanhist(serv, channel)[1]['track']
 
         return track
 
     def get_chanthumb(self, serv=None, channel=None):
         """Get the thumbnail for a channel."""
 
-        return self.get_ext_channel_info(serv, channel, key='asset_url')
+        return self.get_ext_channel_info(serv, channel, attr='asset_url')

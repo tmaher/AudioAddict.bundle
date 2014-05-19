@@ -65,7 +65,6 @@ def GetChannels(serv):
     # Set some preferences. It really makes life easier if they're set.
     Log.Debug("Global default service set to '%s'", serv)
 
-    AA.set_service(serv)
     AA.set_listenkey(Prefs['listen_key'])
     AA.set_streampref(Prefs['stream_pref'])
     AA.set_sourcepref(Prefs['source_pref'])
@@ -74,11 +73,11 @@ def GetChannels(serv):
 
     oc = ObjectContainer(title1=AA.get_servicename(serv))
 
-    for channel in AA.get_chanlist(refresh=True):
+    for channel in AA.get_chanlist(serv):
         # Use the handy internal Dict api to avoid re-generating the streamurl
         # over and over.
         if not channel['key'] in Dict:
-            Dict[channel['key']] = AA.get_streamurl(channel['key'])
+            Dict[channel['key']] = AA.get_streamurl(serv, channel['key'])
 
         oc.add(CreateChannelObject(
             url=Dict[channel['key']],
