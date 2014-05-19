@@ -127,12 +127,6 @@ class AudioAddict:
 
         return True
 
-
-    def get_service(self):
-        """Get which service we're using."""
-
-        return self.service
-
     def get_servicename(self, serv=None):
         """Get the name of a given service."""
 
