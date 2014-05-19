@@ -37,13 +37,6 @@ class AudioAddict:
         # public3 is the only endpoint common to all services.
         self.streampref = 'public3'
         self.sourcepref = None
-        # These mark the locations of embedded channel info blobs in the
-        # home pages for each service.
-        self.extinfostring = {
-                'sky': "NS('AudioAddict.API.Config').channels",
-                'di': "NS('AudioAddict').Channels"
-                }
-        self.extinfo = []
 
     def get_apihost(self, url=True, ssl=False):
         """Get the AA API host; normally used as part of a URL."""
@@ -224,18 +217,6 @@ class AudioAddict:
 
         return track
 
-    def get_extinfostring(self, serv=None):
-        """Get the infostring (search marker) for a service."""
-
-        if serv == None:
-            serv = self.get_service()
-
-        infostring = None
-        if serv in self.extinfostring:
-            infostring = self.extinfostring[serv]
-
-        return infostring
-
     def get_extinfo(self, serv=None, refresh=False):
         """Get extended info for a service from the batch API"""
 
@@ -253,10 +234,8 @@ class AudioAddict:
 
         thumb = None
 
-        Log.Debug("Getting thumb for serv %s, channel %s", serv, channel)
-        for channel in self.get_extinfo(serv=serv):
-            if 'key' in channel.keys():
-                if channel['key'] == channel:
-                    thumb = channel['asset_url']
+        for chaninfo in self.get_extinfo(serv=serv):
+            if 'key' in chaninfo and chaninfo['key'] == channel:
+                thumb = chaninfo['asset_url']
 
         return thumb
