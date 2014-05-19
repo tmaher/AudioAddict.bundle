@@ -86,6 +86,54 @@ class AudioAddict:
 
         self.service = serv
 
+    def get_ext_channel_info(self, serv=None, channel=None, key=None):
+        """Get extended channel info from local storage"""
+
+        if (not 'ext_chaninfo' in Dict) or (not serv in Dict['ext_chaninfo']):
+            self.fetch_service_channel_info(serv)
+
+        if not(channel in Dict['ext_chaninfo'][serv]):
+            self.fetch_service_channel_info(serv, refresh=True)
+
+        if not(channel in Dict['ext_chaninfo'][serv]):
+            Log.Error("Trying to read nonexistant channel %s/%s", serv, channel)
+            return None
+
+        if key == None:
+          return Dict['ext_chaninfo'][serv][channel]
+
+        if not key in Dict['ext_chaninfo'][serv][channel]:
+          return None
+
+        return Dict['ext_chaninfo'][serv][channel][key]
+
+    def fetch_service_channel_info(self, serv=None, refresh=False):
+        """Fetch from API everything we need to know about this service"""
+
+        if serv == None:
+            serv = self.get_service()
+
+        Log.Debug("batch_update fetch, serv %s", serv)
+        url = self.get_apihost() + serv + "/mobile/batch_update?stream_set_key=public3"
+
+        max_age_in_cache = 0 if refresh else CACHE_1WEEK
+        svc_info = JSON.ObjectFromURL(url, headers=self.auth_header, cacheTime = max_age_in_cache)
+
+        if refresh or (not 'ext' in Dict):
+            Dict['ext'] = {}
+        Dict['ext'][serv] = svc_info
+
+        if refresh or (not 'ext_chaninfo' in Dict):
+            Dict['ext_chaninfo'] = {}
+        if refresh or (not serv in Dict['ext_chaninfo']):
+            Dict['ext_chaninfo'][serv] = {}
+
+        for chaninfo in svc_info['channel_filters'][0]['channels']:
+            Dict['ext_chaninfo'][serv][chaninfo['key']] = chaninfo
+
+        return True
+
+
     def get_service(self):
         """Get which service we're using."""
 
@@ -217,25 +265,7 @@ class AudioAddict:
 
         return track
 
-    def get_extinfo(self, serv=None, refresh=False):
-        """Get extended info for a service from the batch API"""
-
-        if serv == None:
-            serv = self.get_service()
-
-        url = self.get_apihost() + serv + "/mobile/batch_update?stream_set_key=public3"
-
-        extinfo = JSON.ObjectFromURL(url, headers=self.auth_header, cacheTime = CACHE_1WEEK)
-
-        return extinfo['channel_filters'][0]['channels']
-
     def get_chanthumb(self, serv=None, channel=None):
         """Get the thumbnail for a channel."""
 
-        thumb = None
-
-        for chaninfo in self.get_extinfo(serv=serv):
-            if 'key' in chaninfo and chaninfo['key'] == channel:
-                thumb = chaninfo['asset_url']
-
-        return thumb
+        return self.get_ext_channel_info(serv, channel, key='asset_url')
