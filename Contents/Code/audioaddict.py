@@ -39,20 +39,10 @@ class AudioAddict:
         for serv in self.validservices:
             HTTP.PreCache(self.batch_update_url(serv), headers=self.auth_header)
 
-    def get_apihost(self, url=True, ssl=False):
-        """Get the AA API host; normally used as part of a URL."""
+    def api_base(self, serv=None, ssl=False):
+        """Get the base URL for the AudioAddict API"""
 
-        if url == False:
-            return self.apihost
-
-        obj = '://' + self.apihost + '/v1/'
-
-        if ssl == True:
-            obj = 'https' + obj
-        else:
-            obj = 'http' + obj
-
-        return obj
+        return "http" + ("s" if ssl else "") + "://" + self.apihost + "/v1/" + serv + "/"
 
     def set_listenkey(self, listenkey=None):
         """Set the listen_key."""
@@ -80,7 +70,7 @@ class AudioAddict:
         return self.validservices
 
     def batch_update_url(self, serv=None):
-        return self.get_apihost() + serv + "/mobile/batch_update?stream_set_key=" + self.streampref
+        return self.api_base(serv) + "/mobile/batch_update?stream_set_key=" + self.streampref
 
     def get_ext_channel_info(self, serv=None, channel=None, attr=None):
         """Get extended channel info from local storage"""
@@ -212,7 +202,7 @@ class AudioAddict:
     def get_chanhist(self, serv=None, channel=None):
         """Get track history for a channel."""
 
-        servurl = self.get_apihost() + serv + '/track_history/channel/' + str(self.get_chaninfo(serv, channel)['id'])
+        servurl = self.api_base(serv) + '/track_history/channel/' + str(self.get_chaninfo(serv, channel)['id'])
 
         return JSON.ObjectFromURL(servurl, cacheTime=0)
 
