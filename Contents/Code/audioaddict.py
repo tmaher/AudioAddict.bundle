@@ -14,6 +14,11 @@ class AudioAddict:
         """Init. You know."""
 
         self.listenkey = None
+
+        # The mobile_batch API requires a (static, global) HTTP Basic
+        # username/pw on all requests.  Dumb, but whatever.
+        self.auth_header = {'Authorization': 'Basic ZXBoZW1lcm9uOmRheWVpcGgwbmVAcHA='}
+
         self.validservices = {
                 'sky': 'Sky.fm',
                 'di': 'DI.fm',
@@ -46,7 +51,7 @@ class AudioAddict:
         if url == False:
             return self.apihost
 
-        obj = '://' + self.apihost + '/v1'
+        obj = '://' + self.apihost + '/v1/'
 
         if ssl == True:
             obj = 'https' + obj
@@ -196,7 +201,7 @@ class AudioAddict:
     def get_chanhist(self, key):
         """Get track history for a channel."""
 
-        servurl = self.get_apihost() + '/' + self.get_service() + '/' + 'track_history/channel/' + str(self.get_chaninfo(key)['id'])
+        servurl = self.get_apihost() + self.get_service() + '/' + 'track_history/channel/' + str(self.get_chaninfo(key)['id'])
 
         data = urllib.urlopen(servurl)
         history = json.loads(data.read())
@@ -232,67 +237,26 @@ class AudioAddict:
         return infostring
 
     def get_extinfo(self, serv=None, refresh=False):
-        """Set the extended channel info for a service."""
-
-        # If we've already polled for extinfo, don't do it again.
-        if len(self.extinfo) > 0 and refresh == False:
-            return self.extinfo
-
-        # This scrapes the home page of a service for the embedded extended
-        # channel info blob. There is probably a way to get this from the API.
-        # Pull requests welcome. :)
+        """Get extended info for a service from the batch API"""
 
         if serv == None:
             serv = self.get_service()
 
-        json_list = []
-        json_dict = {}
-        json_converted = []
+        url = self.get_apihost() + serv + "/mobile/batch_update?stream_set_key=public3"
 
-        data = urllib.urlopen(self.get_serviceurl(prefix='www'))
-        page = data.readlines()
+        extinfo = JSON.ObjectFromURL(url, headers=self.auth_header, cacheTime = CACHE_1WEEK)
 
-        findme = self.get_extinfostring(self.get_service())
+        return extinfo['channel_filters'][0]['channels']
 
-        for line in page:
-            if findme in line:
-                # We don't want the preamble (only the json blob) so find where
-                # in the line the blob begins then extract it and strip the
-                # whitespace. The result will have a semi-colon at the end;
-                # Remove that then load the blob as a json object.
-                if serv == 'sky':
-                    # This page uses an array to frame the blob.
-                    pos = line.find('[')
-                    json_blob = line[pos:].strip()
-                    json_blob = json_blob[:-1]
-                    json_list = json.loads(json_blob)
-
-                    # Flatten the contents.
-                    for channel in json_list:
-                        json_converted.append(channel['channel'])
-
-                if serv == 'di':
-                    # This page has no array - just the dict blob.
-                    pos = line.find('{')
-                    json_blob = line[pos:].strip()
-                    json_blob = json_blob[:-1]
-                    json_dict = json.loads(json_blob)
-
-                    # Flatten the contents.
-                    for chanid in json_dict.keys():
-                        json_converted.append(json_dict[chanid])
-
-        self.extinfo = json_converted
-        return self.extinfo
-
-    def get_chanthumb(self, key):
+    def get_chanthumb(self, serv=None, channel=None):
         """Get the thumbnail for a channel."""
 
         thumb = None
 
-        for channel in self.get_extinfo():
+        Log.Debug("Getting thumb for serv %s, channel %s", serv, channel)
+        for channel in self.get_extinfo(serv=serv):
             if 'key' in channel.keys():
-                if channel['key'] == key:
+                if channel['key'] == channel:
                     thumb = channel['asset_url']
 
         return thumb
