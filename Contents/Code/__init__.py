@@ -31,6 +31,9 @@ def Start():
     DirectoryObject.thumb = R(ICON)
 
     HTTP.CacheTime = CACHE_1HOUR
+    AA.heat_up_cache()
+    Log.Debug("AudioAddict Start() complete")
+
 
 def ValidatePrefs():
     """This doesn't do anything useful yet."""

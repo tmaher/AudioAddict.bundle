@@ -3,8 +3,6 @@
 # pylint: disable=line-too-long, old-style-class, broad-except
 # This is based entirely on http://tobiass.eu/api-doc.html (thanks!)
 
-import urllib
-import json
 import random
 
 class AudioAddict:
@@ -36,6 +34,10 @@ class AudioAddict:
         # public3 is the only endpoint common to all services.
         self.streampref = 'public3'
         self.sourcepref = None
+
+    def heat_up_cache(self, refresh=False):
+        for serv in self.validservices:
+            HTTP.PreCache(self.batch_update_url(serv), headers=self.auth_header)
 
     def get_apihost(self, url=True, ssl=False):
         """Get the AA API host; normally used as part of a URL."""
@@ -77,6 +79,9 @@ class AudioAddict:
 
         return self.validservices
 
+    def batch_update_url(self, serv=None):
+        return self.get_apihost() + serv + "/mobile/batch_update?stream_set_key=" + self.streampref
+
     def get_ext_channel_info(self, serv=None, channel=None, attr=None):
         """Get extended channel info from local storage"""
 
@@ -102,10 +107,9 @@ class AudioAddict:
         """Fetch from API everything we need to know about this service"""
 
         Log.Debug("batch_update fetch, serv %s", serv)
-        url = self.get_apihost() + serv + "/mobile/batch_update?stream_set_key=public3"
 
         max_age_in_cache = 0 if refresh else CACHE_1WEEK
-        svc_info = JSON.ObjectFromURL(url, headers=self.auth_header, cacheTime = max_age_in_cache)
+        svc_info = JSON.ObjectFromURL(self.batch_update_url(serv), headers=self.auth_header, cacheTime = max_age_in_cache)
 
         if refresh or (not 'ext' in Dict):
             Dict['ext'] = {}
@@ -153,11 +157,6 @@ class AudioAddict:
 
         self.streampref = stream
 
-    def get_streampref(self):
-        """Get the preferred stream."""
-
-        return self.streampref
-
     def set_sourcepref(self, source=None):
         """Set the preferred source."""
 
@@ -173,7 +172,7 @@ class AudioAddict:
 
         max_time_in_cache = 0 if refresh else CACHE_1HOUR
 
-        return JSON.ObjectFromURL(self.get_serviceurl(serv) + self.get_streampref(), cacheTime=max_time_in_cache)
+        return JSON.ObjectFromURL(self.get_serviceurl(serv) + self.streampref, cacheTime=max_time_in_cache)
 
     def get_chaninfo(self, serv=None, channel=None):
         """Get the info for a particular channel."""
@@ -192,7 +191,7 @@ class AudioAddict:
     def get_streamurl(self, serv=None, channel=None):
         """Generate a streamable URL for a channel."""
 
-        channelurl = self.get_serviceurl(serv) + self.get_streampref() + '/' + channel + self.get_listenkey()
+        channelurl = self.get_serviceurl(serv) + self.streampref + '/' + channel + self.get_listenkey()
 
         sources = JSON.ObjectFromURL(channelurl)
 
