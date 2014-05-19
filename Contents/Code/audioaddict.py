@@ -25,6 +25,18 @@ class AudioAddict:
                 }
         self.apihost = 'api.audioaddict.com'
 
+        self.all_valid_streams = {
+          'sky': ['public3', 'public1',
+                  'premium_low', 'premium_medium', 'premium', 'premium_high'],
+          'di':  ['public3', 'public2', 'public1',
+                  'premium_low', 'premium_medium', 'premium', 'premium_high'],
+          'jazzradio': ['public3', 'public1',
+                  'premium_low', 'premium_medium', 'premium', 'premium_high'],
+          'rockradio': ['public3', 'android_low', 'android',
+                  'android_premium_medium', 'android_premium',
+                  'android_premium_high']
+          }
+
         # Can't get AAC to play back, so MP3-only for now.
         self.validstreams = [
                 'public3',
@@ -42,7 +54,7 @@ class AudioAddict:
     def api_base(self, serv=None, ssl=False):
         """Get the base URL for the AudioAddict API"""
 
-        return "http" + ("s" if ssl else "") + "://" + self.apihost + "/v1/" + serv + "/"
+        return "http" + ("s" if ssl else "") + "://" + self.apihost + "/v1/" + serv
 
     def set_listenkey(self, listenkey=None):
         """Set the listen_key."""
@@ -70,7 +82,7 @@ class AudioAddict:
         return self.validservices
 
     def batch_update_url(self, serv=None):
-        return self.api_base(serv) + "/mobile/batch_update?stream_set_key=" + self.streampref
+        return self.api_base(serv) + "/mobile/batch_update?stream_set_key=" + ",".join(self.all_valid_streams[serv])
 
     def get_ext_channel_info(self, serv=None, channel=None, attr=None):
         """Get extended channel info from local storage"""
@@ -161,6 +173,7 @@ class AudioAddict:
         """Get the master channel list."""
 
         max_time_in_cache = 0 if refresh else CACHE_1HOUR
+        Log.Debug("Fetching serv %s chanlist, cache=%s", serv, str(max_time_in_cache))
 
         return JSON.ObjectFromURL(self.get_serviceurl(serv) + self.streampref, cacheTime=max_time_in_cache)
 
@@ -183,7 +196,7 @@ class AudioAddict:
 
         channelurl = self.get_serviceurl(serv) + self.streampref + '/' + channel + self.get_listenkey()
 
-        sources = JSON.ObjectFromURL(channelurl)
+        sources = JSON.ObjectFromURL(channelurl, cacheTime=CACHE_1HOUR)
 
         streamurl = None
 
