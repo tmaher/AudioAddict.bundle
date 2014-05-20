@@ -4,6 +4,7 @@
 # This is based entirely on http://tobiass.eu/api-doc.html (thanks!)
 
 import random
+from urlparse import urlparse
 
 class AudioAddict:
     """AudioAddict utility class."""
@@ -132,23 +133,32 @@ class AudioAddict:
         self.fetch_service_channel_info(serv, refresh)
         return Dict['ext_chaninfo'][serv].keys()
 
-    def get_ext_streams(self, serv=None, channel=None, stream=None):
-        """Get stream info for a given service/channel/stream tuple"""
+    def get_ext_streamurls(self, serv=None, channel=None, stream=None):
+        """Get stream URLs for a given service/channel/streamlist tuple"""
 
-        if not 'chan2stream' in Dict:
-            Dict['chan2stream'] = {}
-        if not serv in Dict['chan2stream']:
-            Dict['chan2stream'][serv] = {}
-        if not channel in Dict['chan2stream'][serv]:
-            Dict['chan2stream'][serv][channel] = {}
-        if not stream in Dict['chan2stream'][serv][channel]:
-            id = self.get_ext_channel_info(serv, channel)['id']
-            Dict['chan2stream'][serv][channel][stream] = ifilter(
-                lambda x: ('id' in x) and (x['id'] == id),
-                Dict['streamlists'][stream]['channels'])[0]['streams']
+        if not 'streamurls' in Dict:
+            Dict['streamurls'] = {}
+        if not serv in Dict['streamurls']:
+            Dict['streamurls'][serv] = {}
 
-        return Dict['chan2stream'][serv][channel][stream]
+        if not stream in Dict['streamurls'][serv]:
+            Dict['streamurls'][serv][stream] = {}
+            for c in Dict['ext'][serv]['streamlists'][stream]['channels']:
+                Dict['streamurls'][serv][stream][c['id']] = c['streams']
 
+        id = self.get_ext_channel_info(serv, channel, attr='id')
+
+        return Dict['streamurls'][serv][stream][id]
+
+    def pick_streamurl(self, serv=None, channel=None, stream=None):
+        """Pick an URL, any URL"""
+
+        if stream == None:
+            stream = self.streampref
+
+        candidates = self.get_ext_streamurls(serv, channel, stream)
+
+        return random.choice(candidates)
 
     def get_servicename(self, serv=None):
         """Get the name of a given service."""

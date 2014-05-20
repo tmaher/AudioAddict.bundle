@@ -76,17 +76,17 @@ def GetChannels(serv):
 
     oc = ObjectContainer(title1=AA.get_servicename(serv))
 
-    for channel in AA.get_ext_chanlist(serv):
+    for channel in sorted(AA.get_ext_chanlist(serv)):
         if not 'ui' in Dict:
             Dict['ui'] = {}
         if not channel in Dict['ui']:
-            Dict['ui'][channel] = AA.get_streamurl(serv, channel)
+            Dict['ui'][channel] = AA.pick_streamurl(serv, channel)
 
         oc.add(CreateChannelObject(
-            url=Dict['ui'][channel],
+            url=Dict['ui'][channel]['url'],
             title=AA.get_chan_title(serv, channel),
             summary=AA.get_chan_summary(serv, channel),
-            fmt='mp3',
+            fmt=Dict['ui'][channel]['format'],
             thumb=AA.get_chan_thumb(serv, channel)
         ))
 
