@@ -436,9 +436,9 @@ android_premium_high    | 256k         | mp3
 appleapp_low            | 40k          | aac
 appleapp                | 64k          | aac
 ~~appleapp_high~~       | ~~64k~~      | ~~aac~~
+appleapp_premium_medium | 64k          | aac
 appleapp_premium        | 128k         | aac
 appleapp_premium_high   | 256k         | mp3
-appleapp_premium_medium | 64k          | aac
 
 Notes:
 
