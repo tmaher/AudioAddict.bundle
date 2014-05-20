@@ -87,7 +87,9 @@ def GetChannels(serv):
             title=AA.get_chan_title(serv, channel),
             summary=AA.get_chan_summary(serv, channel),
             fmt=Dict['ui'][channel]['format'],
-            thumb=AA.get_chan_thumb(serv, channel)
+            bitrate=Dict['ui'][channel]['bitrate'],
+            thumb=AA.get_chan_thumb(serv, channel),
+            include_container=False
         ))
 
     return oc
@@ -98,6 +100,7 @@ def CreateChannelObject(
         title,
         summary,
         fmt,
+        bitrate,
         thumb,
         include_container=False
     ):
@@ -116,6 +119,8 @@ def CreateChannelObject(
             title=title,
             summary=summary,
             fmt=fmt,
+            bitrate=bitrate,
+            thumb=thumb,
             include_container=True
             ),
         rating_key=url,
@@ -129,7 +134,7 @@ def CreateChannelObject(
                 ],
                 container=container,
                 audio_codec=audio_codec,
-                bitrate=128,    # this is never correct :P
+                bitrate=bitrate,
                 audio_channels=2
             )
         ]

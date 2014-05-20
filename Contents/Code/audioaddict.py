@@ -26,25 +26,35 @@ class AudioAddict:
                 }
         self.apihost = 'api.audioaddict.com'
 
-        self.all_valid_streams = {
-          'sky': ['public3', 'public1',
-                  'premium_low', 'premium_medium', 'premium', 'premium_high'],
-          'di':  ['public3', 'public2', 'public1',
-                  'premium_low', 'premium_medium', 'premium', 'premium_high'],
-          'jazzradio': ['public3', 'public1',
-                  'premium_low', 'premium_medium', 'premium', 'premium_high'],
-          'rockradio': ['public3', 'android_low', 'android',
-                  'android_premium_medium', 'android_premium',
-                  'android_premium_high']
-          }
+        self.common_streams = {
+          "android_low":    {"codec": "aac", "bits":  40, "premium": False},
+          "android":        {"codec": "aac", "bits":  64, "premium": False},
+          "premium_medium": {"codec": "aac", "bits":  64, "premium": True},
+          "premium":        {"codec": "aac", "bits": 128, "premium": True},
+          "premium_high":   {"codec": "mp3", "bits": 256, "premium": True}
+        }
 
-        # Can't get AAC to play back, so MP3-only for now.
-        self.validstreams = [
-                'public3',
-                'premium_high',
-                'android_premium_high' # rockradio only
-                ]
-        # public3 is the only endpoint common to all services.
+        self.serv_streams = {
+          "di": {
+            "public3":     {"codec": "mp3", "bits": 96, "premium": False},
+            "premium_low": {"codec": "aac", "bits": 40, "premium": True}
+          },
+          "sky": {
+            "public3":     {"codec": "mp3", "bits": 96, "premium": False},
+            "premium_low": {"codec": "aac", "bits": 40, "premium": True}
+          },
+          "jazzradio": {
+            "public3":     {"codec": "mp3", "bits": 64, "premium": False},
+            "premium_low": {"codec": "aac", "bits": 40, "premium": True}
+          },
+          "rockradio": {
+            "public3":     {"codec": "mp3", "bits": 96, "premium": False}
+          }
+        }
+
+        for serv in self.serv_streams:
+            self.serv_streams[serv].update(self.common_streams)
+
         self.streampref = 'public3'
         self.sourcepref = None
 
@@ -83,7 +93,9 @@ class AudioAddict:
         return self.validservices
 
     def batch_update_url(self, serv=None):
-        return self.api_base(serv) + "/mobile/batch_update?stream_set_key=" + ",".join(self.all_valid_streams[serv])
+        """Construct the URL to call batch_update"""
+
+        return self.api_base(serv) + "/mobile/batch_update?stream_set_key=" + ",".join(self.serv_streams[serv])
 
     def get_ext_channel_info(self, serv=None, channel=None, attr=None):
         """Get extended channel info from local storage"""
@@ -168,10 +180,10 @@ class AudioAddict:
 
         return self.validservices[serv]
 
-    def get_validstreams(self):
+    def get_validstreams(self, serv=None):
         """Get the list of valid streams."""
 
-        return self.validstreams
+        return self.serv_streams[serv].keys()
 
     def get_serviceurl(self, serv=None):
         """Get the service URL for the service we're using."""
@@ -181,8 +193,9 @@ class AudioAddict:
     def set_streampref(self, stream=None):
         """Set the preferred stream."""
 
-        if not stream in self.get_validstreams():
-            raise Exception('Invalid stream')
+        # !!!DANGER WILL ROBINSON!!!
+        #if not stream in self.get_validstreams():
+        #    raise Exception('Invalid stream')
 
         self.streampref = stream
 
