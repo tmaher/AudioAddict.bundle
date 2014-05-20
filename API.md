@@ -405,71 +405,112 @@ URL    | http://api.audioaddict.com/v1/[NETWORK]/plans/premium-pass
 
 #### 4.1. Streamlists
 
-Streamlists are lists of stream URLs. All streams in a streamlist have the same format and bitrate. Every network has their own streamlists. All streamlists listed below are taken from the website and the apps.
+Streamlists are lists of stream URLs. All streams in a streamlist have the same format and bitrate.  While there's a fair degree of overlap in the names and formats, they're not uniform across all networks.
 
-##### Digitally Imported
+I've been unable to find any API endpoint that enumerates all of a network's streamlists, hence having to include them in here.  The names were obtained by inspecting the websites, as well as using a debugging HTTP proxy with the iOS and Android Apps.
 
-Streamlist  | bitrate | codec
-------------|---------|------
-android_low | 40kbps  | aac
-android     | 64kbps  | aac
-android_high | 96kbps | mp3
-android_premium_low | 40kbps | aac
-android_premium_medium | 64kbps | aac
-android_premium | 128kbps | aac
-android_premium_high | 256kbps | mp3
-public1 | 64kbps | aac
-public2 | 40kbps | aac
-public3 | 96kbps | mp3
-premium_low | 40kbps | aac
-premium_medium | 64kbps | aac
-premium | 128kbps | aac
-premium_high | 256kbps | mp3
+##### All Streamlist Names
 
-##### Sky.fm
+***All data is as of 2014-05-20***
 
-Streamlist  | bitrate | codec
-------------|---------|------
-appleapp_low | 40kbps | aac
-appleapp | 64kbps | aac
-appleapp_high | 96kbps | mp3
-appleapp_premium_medium | 64kbps | aac
-appleapp_premium | 128kbps | aac
-appleapp_premium_high | 256kbps | mp3
-public1 | 40kbps | aac
-public5 | 40kbps | wma
-public3 | 96kbps | mp3
-premium_low | 40kbps | aac
-premium_medium | 64kbps | aac
-premium | 128kbps | aac
-premium_high | 256kbps | mp3
+Streamlist name         | Bitrate      | Codec
+------------------------|--------------|--------------
+public1                 | VARIES       | aac
+~~public2~~             | ~~VARIES~~   | ~~aac~~
+public3                 | VARIES       | mp3
+public5                 | VARIES       | mp3
+&nbsp;                  | &nbsp;       | &nbsp;
+~~premium_low~~         | ~~40k~~      | ~~aac~~
+premium_medium          | 64k          | aac
+premium                 | 128k         | aac
+premium_high            | 256k         | mp3
+&nbsp;                  | &nbsp;       | &nbsp;
+android_low             | 40k          | aac
+android                 | 64k          | aac
+~~android_high~~        | ~~64k~~      | ~~aac~~
+~~android_premium_low~~ | ~~40k~~      | ~~aac~~
+android_premium_medium  | 64k          | aac
+android_premium         | 128k         | aac
+android_premium_high    | 256k         | mp3
+&nbsp;                  | &nbsp;       | &nbsp;
+appleapp_low            | 40k          | aac
+appleapp                | 64k          | aac
+~~appleapp_high~~       | ~~64k~~      | ~~aac~~
+appleapp_premium        | 128k         | aac
+appleapp_premium_high   | 256k         | mp3
+appleapp_premium_medium | 64k          | aac
 
-##### JazzRadio
+Notes:
 
-Streamlist  | bitrate | codec
-------------|---------|------
-appleapp_low | 40kbps | aac
-appleapp | 64kbps | aac
-appleapp_premium_medium | 64kbps | aac
-appleapp_premium | 128kbps | aac
-appleapp_premium_high | 256kbps | mp3
-public1 | 40kbps | aac
-public3 | 64kbps | mp3
-premium_low | 40kbps | aac
-premium_medium | 64kbps | aac
-premium | 128kbps | aac
-premium_high | 256kbps | mp3
+* ~~struckthrough~~ streams (e.g. ~~android_high~~) are either ***INVALID*** or malformed on one or more networks.
+* The `public*` streams are a bit of a mess.  See the individual networks details.
+* `public3` is a relatively safe default for dev/testing.  It's mp3 and is present on all networks.  *Caveat*: `public3` is 64k mp3 on Jazz, but 96k mp3 everywhere else.
+* `public5` appears to have previously been 40k wma.  It's now a duplicate of `public3`.
+* `android_high` and `appleapp_high` should be avoided.  For Jazz & Rock, they are outright invalid (i.e., you get an HTTP 500 response).  For Sky and DI, they are just duplicates of `android`/`appleapp` (64k aac).  The Sky and DI metadata in batch_update says they're going to be removed soon.
+
+
+##### di/Digitally Imported
+* `android_high` and `appleapp_high` are valid but should be avoided. The metadata implies they're deprecated.
+* `android_premium_low` and `premium_low` appear safe.
+
+Streamlist name         | Bitrate      | Codec
+------------------------|--------------|--------------
+public1                 | 64k          | aac
+public2                 | 40k          | aac
+public3                 | 96k          | mp3
+public5                 | 96k          | mp3
+&nbsp;                  | &nbsp;       | &nbsp;
+android_premium_low     | 40k          | aac
+premium_low             | 40k          | aac
+&nbsp;                  | &nbsp;       | &nbsp;
+~~android_high~~        | ~~64k~~      | ~~aac~~
+~~appleapp_high~~       | ~~64k~~      | ~~aac~~
+
+
+##### Sky
+* `public2` is ***INVALID*** for Sky
+* `android_high` and `appleapp_high` are valid but should be avoided. The metadata implies they're deprecated.
+* `android_premium_low` and `premium_low` appear safe.
+
+Streamlist name         | Bitrate      | Codec
+------------------------|--------------|--------------
+public1                 | 40k          | aac
+public3                 | 96k          | mp3
+public5                 | 96k          | mp3
+&nbsp;                  | &nbsp;       | &nbsp;
+android_premium_low     | 40k          | aac
+premium_low             | 40k          | aac
+&nbsp;                  | &nbsp;       | &nbsp;
+~~android_high~~        | ~~64k~~      | ~~aac~~
+~~appleapp_high~~       | ~~64k~~      | ~~aac~~
+
 
 ##### RockRadio
+* `android_high` and `appleapp_high` are ***INVALID*** for RockRadio
+* `android_premium_low` and `premium_low` should be considered ***INVALID*** for RockRadio.  batch_update returns metadata but no streaming URLs.
 
-Streamlist  | bitrate | codec
-------------|---------|------
-android_low | 40kbps | aac
-android | 64kbps | aac
-android_premium_medium | 64kbps | aac
-android_premium | 128kbps | aac
-android_premium_high | 256kbps | mp3
-public3 | 96kbps|  mp3
+Streamlist name         | Bitrate      | Codec
+------------------------|--------------|--------------
+public1                 | 40k          | aac
+public2                 | 64k          | aac
+public3                 | 96k          | mp3
+public5                 | 96k          | mp3
+
+
+##### JazzRadio
+* `android_high` and `appleapp_high` are ***INVALID*** for JazzRadio
+* `public2` is ***INVALID*** for JazzRadio
+* `android_premium_low` and `premium_low` appear safe.
+
+Streamlist name         | Bitrate      | Codec
+------------------------|--------------|--------------
+public1                 | 40k          | aac
+public3                 | 64k          | mp3
+public5                 | 64k          | mp3
+&nbsp;                  | &nbsp;       | &nbsp;
+android_premium_low     | 40k          | aac
+premium_low             | 40k          | aac
+
 
 #### 4.2. Validating listen keys
 
