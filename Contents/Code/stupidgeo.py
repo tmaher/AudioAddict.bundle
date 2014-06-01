@@ -4,7 +4,7 @@ from math import radians, cos, sin, asin, sqrt
 from urlparse import urlparse
 
 class StupidGeo:
-"""Geolocation utility class"""
+    """Geolocation utility class"""
 
     def __init__(self):
         self.lookup_url = "https://freegeoip.net/json/"
@@ -37,7 +37,7 @@ class StupidGeo:
         so, yeah, this is necessary.
         """
 
-        url_hostname = urlparse(c).hostname
+        url_hostname = urlparse(name_or_url).hostname
         return name_or_url if url_hostname == None else url_hostname
 
     def get_closest_host(self, candidates, target=""):
@@ -48,7 +48,7 @@ class StupidGeo:
 
         t = self.get_location_info(target)
         return min(candidates,
-            key=lambda x: self.haversine(t, self.get_location_info(x)))
+            key=lambda x: self.haversine(t, self.get_location_info(x['url'])))
 
     def haversine(self, pos1, pos2):
         """

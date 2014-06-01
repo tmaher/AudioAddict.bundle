@@ -5,6 +5,7 @@
 
 import random
 from urlparse import urlparse
+from stupidgeo import StupidGeo
 
 class AudioAddict:
     """AudioAddict utility class."""
@@ -57,6 +58,7 @@ class AudioAddict:
 
         self.streampref = 'public3'
         self.sourcepref = None
+        self.geo = StupidGeo()
 
     def heat_up_cache(self, refresh=False):
         for serv in self.validservices:
@@ -168,9 +170,8 @@ class AudioAddict:
         if stream == None:
             stream = self.streampref
 
-        candidates = self.get_ext_streamurls(serv, channel, stream)
-
-        return random.choice(candidates)
+        return self.geo.get_closest_host(
+            self.get_ext_streamurls(serv, channel, stream))
 
     def get_servicename(self, serv=None):
         """Get the name of a given service."""

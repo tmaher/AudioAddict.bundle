@@ -68,26 +68,30 @@ def GetChannels(serv):
     # Set some preferences. It really makes life easier if they're set.
     Log.Debug("Global default service set to '%s'", serv)
 
+    stream = Prefs['stream_pref']
+    AA.set_streampref(stream)
     AA.set_listenkey(Prefs['listen_key'])
-    AA.set_streampref(Prefs['stream_pref'])
     AA.set_sourcepref(Prefs['source_pref'])
     #TODO: Prefs['force_refresh'] boolean which clears the chanlist and
     # the Dict (streamurls).
 
     oc = ObjectContainer(title1=AA.get_servicename(serv))
 
+    if not 'ui' in Dict:
+        Dict['ui'] = {}
+    if not stream in Dict['ui']:
+        Dict['ui'][stream] = {}
+
     for channel in sorted(AA.get_ext_chanlist(serv)):
-        if not 'ui' in Dict:
-            Dict['ui'] = {}
-        if not channel in Dict['ui']:
-            Dict['ui'][channel] = AA.pick_streamurl(serv, channel)
+        if not channel in Dict['ui'][stream]:
+            Dict['ui'][stream][channel] = AA.pick_streamurl(serv, channel)
 
         oc.add(CreateChannelObject(
-            url=Dict['ui'][channel]['url'],
+            url=Dict['ui'][stream][channel]['url'],
             title=AA.get_chan_title(serv, channel),
             summary=AA.get_chan_summary(serv, channel),
-            fmt=Dict['ui'][channel]['format'],
-            bitrate=Dict['ui'][channel]['bitrate'],
+            fmt=Dict['ui'][stream][channel]['format'],
+            bitrate=Dict['ui'][stream][channel]['bitrate'],
             thumb=AA.get_chan_thumb(serv, channel),
             include_container=False
         ))
